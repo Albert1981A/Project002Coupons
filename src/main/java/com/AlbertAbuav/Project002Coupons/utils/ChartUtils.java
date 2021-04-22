@@ -1,8 +1,10 @@
 package com.AlbertAbuav.Project002Coupons.utils;
 
+import com.AlbertAbuav.Project002Coupons.beans.Company;
 import com.AlbertAbuav.Project002Coupons.beans.Coupon;
+import com.AlbertAbuav.Project002Coupons.beans.Customer;
+import com.AlbertAbuav.Project002Coupons.beans.CustomerVsCoupons;
 import com.AlbertAbuav.Project002Coupons.repositories.CouponRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +16,6 @@ import java.util.List;
 @Component
 public class ChartUtils {
 
-    /*
-
-    //private static CouponsDAO couponsDAO = new CouponsDBDAO();
     @Autowired
     private static CouponRepository couponRepository;
 
@@ -75,7 +74,7 @@ public class ChartUtils {
     public static void printCompanies (List<Company> companies) {
         printCompanyHeader();
         for (Company company : companies) {
-            List <Coupon> temp = couponsDAO.getAllCouponsOfSingleCompany(company.getId());
+            List <Coupon> temp = couponRepository.findByCompanyID(company.getId());
             if (temp.size() != 0) {
                 company.setCoupons(temp);
             }
@@ -111,11 +110,11 @@ public class ChartUtils {
     public static void printCustomers (List<Customer> customers) {
         printCustomerHeader();
         for (Customer customer : customers) {
-            List<CustomersVsCoupons> temp = couponsDAO.getAllCustomersCoupons(customer.getId());
+            List<CustomerVsCoupons> temp = couponRepository.getAllCustomersCoupons(customer.getId());
             if (temp.size() != 0) {
                 List<Coupon> temp2 = new ArrayList<>();
-                for (CustomersVsCoupons customersVsCoupons : temp) {
-                    Coupon tempCoupon = couponsDAO.getSingleCoupon(customersVsCoupons.getCouponID());
+                for (CustomerVsCoupons customerVsCoupons : temp) {
+                    Coupon tempCoupon = couponRepository.getOne(customerVsCoupons.getCouponID());
                     temp2.add(tempCoupon);
                 }
                 if (temp2.size() != 0) {
@@ -158,5 +157,4 @@ public class ChartUtils {
         }
     }
 
-     */
 }
