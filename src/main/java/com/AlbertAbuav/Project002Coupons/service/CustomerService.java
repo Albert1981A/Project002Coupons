@@ -7,18 +7,20 @@ import com.AlbertAbuav.Project002Coupons.exception.invalidCustomerException;
 import com.AlbertAbuav.Project002Coupons.repositories.CompanyRepository;
 import com.AlbertAbuav.Project002Coupons.repositories.CouponRepository;
 import com.AlbertAbuav.Project002Coupons.repositories.CustomerRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
+import com.AlbertAbuav.Project002Coupons.utils.ChartUtils;
+import com.AlbertAbuav.Project002Coupons.utils.Colors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Scope("prototype")
 public class CustomerService extends ClientFacade {
+
+    @Autowired
+    private ChartUtils chartUtils;
 
     private int customerID;
 
@@ -39,7 +41,9 @@ public class CustomerService extends ClientFacade {
             throw new invalidCustomerException("Could not login. One or both parameters are incorrect!");
         }
         Customer logged = customerRepository.findByEmailAndPassword(email, password);
-        System.out.println("The logged Customer is: | " + logged);
+        Colors.setPurpleBoldPrint("The logged Customer is: | ");
+        chartUtils.printCustomer(logged);
+        System.out.println();
         customerID = logged.getId();
         return true;
     }
@@ -54,6 +58,7 @@ public class CustomerService extends ClientFacade {
      * @param coupon Coupon
      */
     public void addCoupon(Coupon coupon) {
+        couponRepository.save(coupon);
     }
 
     /**
@@ -63,7 +68,7 @@ public class CustomerService extends ClientFacade {
      * @return List
      */
     public List<Coupon> getAllCustomerCoupons() {
-        return null;
+        return couponRepository.findAllByCustomers_Id(customerID);
     }
 
     /**
@@ -74,7 +79,7 @@ public class CustomerService extends ClientFacade {
      * @return List
      */
     public List<Coupon> getAllCustomerCouponsOfSpecificCategory(Category category) {
-        return null;
+        return couponRepository.findAllByCustomers_IdAndCategory(customerID, category.ordinal());
     }
 
     /**
@@ -82,20 +87,29 @@ public class CustomerService extends ClientFacade {
      * That means, return only coupons up to the maximum price set by the customer who made the login.
      *
      * @param maxPrice double
-     * @return List
+     * @return List coupons
      */
     public List<Coupon> getAllCustomerCouponsUpToMaxPrice(double maxPrice) {
-        return null;
+        return couponRepository.findAllByCustomers_IdAndPriceLessThan(customerID, maxPrice);
     }
 
     /**
      * Get customer details.
      * That means, the details of the customer who performed the login.
      *
-     * @return List
+     * @return customer
      */
     public Customer getTheLoggedCustomerDetails() {
-        return null;
+        return customerRepository.getOne(customerID);
+    }
+
+    /**
+     * Get the customers of a single coupon.
+     *
+     * @return List customers
+     */
+    public List<Customer> findAllCustomersByCouponId(int couponID) {
+        return customerRepository.findAllByCoupons_Id(couponID);
     }
 
 

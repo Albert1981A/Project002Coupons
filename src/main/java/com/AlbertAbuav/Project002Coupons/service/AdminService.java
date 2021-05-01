@@ -2,17 +2,22 @@ package com.AlbertAbuav.Project002Coupons.service;
 
 import com.AlbertAbuav.Project002Coupons.beans.Company;
 import com.AlbertAbuav.Project002Coupons.beans.Customer;
-import com.AlbertAbuav.Project002Coupons.beans.CustomerVsCoupons;
 import com.AlbertAbuav.Project002Coupons.exception.invalidAdminException;
 import com.AlbertAbuav.Project002Coupons.repositories.CompanyRepository;
 import com.AlbertAbuav.Project002Coupons.repositories.CouponRepository;
 import com.AlbertAbuav.Project002Coupons.repositories.CustomerRepository;
+import com.AlbertAbuav.Project002Coupons.utils.ChartUtils;
+import com.AlbertAbuav.Project002Coupons.utils.Colors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class AdminService extends ClientFacade{
+
+    @Autowired
+    private ChartUtils chartUtils;
 
     public AdminService(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository) {
         super(companyRepository, customerRepository, couponRepository);
@@ -30,6 +35,8 @@ public class AdminService extends ClientFacade{
         if (!(email.equals("admin@admin.com") && password.equals("admin"))) {
             throw new invalidAdminException("Could not login. One or both parameters are incorrect!");
         }
+        Colors.setGreenBoldPrint("The logged Admin is: | " + email);
+        System.out.println();
         return true;
     }
 
@@ -134,7 +141,4 @@ public class AdminService extends ClientFacade{
         return customerRepository.getOne(id);
     }
 
-    public List<CustomerVsCoupons> getAllCustomerVsCoupons(int customerID) {
-        return couponRepository.getAllCustomersCoupons(customerID);
-    }
 }

@@ -1,13 +1,13 @@
 package com.AlbertAbuav.Project002Coupons.service;
 
-import com.AlbertAbuav.Project002Coupons.beans.Category;
-import com.AlbertAbuav.Project002Coupons.beans.Company;
-import com.AlbertAbuav.Project002Coupons.beans.Coupon;
-import com.AlbertAbuav.Project002Coupons.beans.Customer;
+import com.AlbertAbuav.Project002Coupons.beans.*;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCompanyException;
 import com.AlbertAbuav.Project002Coupons.repositories.CompanyRepository;
 import com.AlbertAbuav.Project002Coupons.repositories.CouponRepository;
 import com.AlbertAbuav.Project002Coupons.repositories.CustomerRepository;
+import com.AlbertAbuav.Project002Coupons.utils.ChartUtils;
+import com.AlbertAbuav.Project002Coupons.utils.Colors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +16,9 @@ import java.util.List;
 @Service
 @Scope("prototype")
 public class CompanyService extends ClientFacade {
+
+    @Autowired
+    private ChartUtils chartUtils;
 
     private int companyID;
 
@@ -36,7 +39,9 @@ public class CompanyService extends ClientFacade {
             throw new invalidCompanyException("Could not login. One or both parameters are incorrect!");
         }
         Company logged = companyRepository.findByEmailAndPassword(email, password);
-        System.out.println("The logged Company is: | " + logged);
+        Colors.setCyanBoldPrint("The logged Company is: | ");
+        chartUtils.printCompany(logged);
+        System.out.println();
         companyID = logged.getId();
         return true;
     }
@@ -91,7 +96,7 @@ public class CompanyService extends ClientFacade {
      * @return List
      */
     public List<Coupon> getAllCompanyCouponsOfSpecificCategory(Category category) {
-        return null;
+        return couponRepository.findByCompanyIDAndCategory(companyID, category.ordinal());
     }
 
     /**
@@ -102,7 +107,7 @@ public class CompanyService extends ClientFacade {
      * @return List
      */
     public List<Coupon> getAllCompanyCouponsUpToMaxPrice(double maxPrice) {
-        return null;
+        return couponRepository.findByCompanyIDAndPriceLessThan(companyID, maxPrice);
     }
 
     /**
@@ -112,7 +117,7 @@ public class CompanyService extends ClientFacade {
      * @return Company
      */
     public Company getTheLoggedCompanyDetails() {
-        return null;
+        return companyRepository.getOne(companyID);
     }
 
     /**
@@ -122,7 +127,7 @@ public class CompanyService extends ClientFacade {
      * @return Coupon
      */
     public Coupon getSingleCoupon(int id) {
-        return null;
+        return couponRepository.getOne(id);
     }
 
     /**
@@ -132,7 +137,7 @@ public class CompanyService extends ClientFacade {
      * @return List
      */
     public List<Customer> getAllCompanyCustomersOfASingleCouponByCouponId(int couponID) {
-        return null;
+        return customerRepository.findAllByCoupons_Id(couponID);
     }
 
 }
