@@ -9,7 +9,6 @@ import com.AlbertAbuav.Project002Coupons.exception.invalidCustomerException;
 import com.AlbertAbuav.Project002Coupons.login.ClientType;
 import com.AlbertAbuav.Project002Coupons.login.LoginManager;
 import com.AlbertAbuav.Project002Coupons.service.AdminService;
-import com.AlbertAbuav.Project002Coupons.service.CompanyService;
 import com.AlbertAbuav.Project002Coupons.utils.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -49,35 +48,53 @@ public class InitData01 implements CommandLineRunner {
         } catch (invalidCompanyException | invalidCustomerException | invalidAdminException e) {
             System.out.println(e.getMessage());
         }
-
-        Company company1 = factoryUtils.createCompany();
-        Company company2 = factoryUtils.createCompany();
-        Company company3 = factoryUtils.createCompany();
-        Company company4 = factoryUtils.createCompany();
-        Company company5 = factoryUtils.createCompany();
-
         Coupon coupon1 = factoryUtils.createCouponOfACompany(1);
         Coupon coupon2 = factoryUtils.createCouponOfACompany(1);
-        Coupon coupon3 = factoryUtils.createCouponOfACompany(2);
+        Coupon coupon3 = factoryUtils.createCouponOfACompany(1);
         Coupon coupon4 = factoryUtils.createCouponOfACompany(2);
-        Coupon coupon5 = factoryUtils.createCouponOfACompany(3);
-        Coupon coupon6 = factoryUtils.createCouponOfACompany(3);
+        Coupon coupon5 = factoryUtils.createCouponOfACompany(2);
+        Coupon coupon6 = factoryUtils.createCouponOfACompany(2);
+        Coupon coupon7 = factoryUtils.createCouponOfACompany(3);
+        Coupon coupon8 = factoryUtils.createCouponOfACompany(3);
+        Coupon coupon9 = factoryUtils.createCouponOfACompany(3);
 
-        List<Coupon> coupons1 = new ArrayList<>(Arrays.asList(coupon1, coupon2));
-        List<Coupon> coupons2 = new ArrayList<>(Arrays.asList(coupon3, coupon4));
-        List<Coupon> coupons3 = new ArrayList<>(Arrays.asList(coupon5, coupon6));
+        List<Coupon> coupons1 = new ArrayList<>(Arrays.asList(coupon1, coupon2, coupon3));
+        List<Coupon> coupons2 = new ArrayList<>(Arrays.asList(coupon4, coupon5, coupon6));
+        List<Coupon> coupons3 = new ArrayList<>(Arrays.asList(coupon7, coupon8, coupon9));
 
-        company1.setCoupons(coupons1);
-        company2.setCoupons(coupons2);
-        company3.setCoupons(coupons3);
+        try {
+            Company company1 = factoryUtils.createCompany();
+            company1.setCoupons(coupons1);
+            adminService.addCompany(company1);
+            Company company2 = factoryUtils.createCompany();
+            company2.setCoupons(coupons2);
+            adminService.addCompany(company2);
+            Company company3 = factoryUtils.createCompany();
+            company3.setCoupons(coupons3);
+            adminService.addCompany(company3);
+            Company company4 = factoryUtils.createCompany();
+            adminService.addCompany(company4);
+            Company company5 = factoryUtils.createCompany();
+            adminService.addCompany(company5);
+            Company company6 = factoryUtils.createCompany();
+            adminService.addCompany(company6);
+            Company company7 = factoryUtils.createCompany();
+            adminService.addCompany(company7);
+            Company company8 = factoryUtils.createCompany();
+            adminService.addCompany(company8);
+            Company company9 = factoryUtils.createCompany();
+            adminService.addCompany(company9);
+            Company company10 = factoryUtils.createCompany();
+            adminService.addCompany(company10);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
 
-        adminService.addCompany(company1);
-        adminService.addCompany(company2);
-        adminService.addCompany(company3);
-        adminService.addCompany(company4);
-        adminService.addCompany(company5);
-
-        chartUtils.printCompanies(adminService.getAllCompanies());
+        try {
+            chartUtils.printCompanies(adminService.getAllCompanies());
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
 
         TestUtils.testAdminInfo("Adding Customers");
 
@@ -86,16 +103,27 @@ public class InitData01 implements CommandLineRunner {
         Customer customer3 = factoryUtils.createCustomer();
         Customer customer4 = factoryUtils.createCustomer();
         Customer customer5 = factoryUtils.createCustomer();
+        Customer customer6 = factoryUtils.createCustomer();
+        Customer customer7 = factoryUtils.createCustomer();
+        Customer customer8 = factoryUtils.createCustomer();
+        Customer customer9 = factoryUtils.createCustomer();
+        Customer customer10 = factoryUtils.createCustomer();
 
-        List<Coupon> customerCoupons1 = new ArrayList<>(Arrays.asList(coupon2, coupon3));
-        List<Coupon> customerCoupons2 = new ArrayList<>(Arrays.asList(coupon3, coupon4));
-        List<Coupon> customerCoupons3 = new ArrayList<>(Arrays.asList(coupon4, coupon5));
+
+        List<Coupon> customerCoupons1 = new ArrayList<>(Arrays.asList(coupon2, coupon3, coupon4, coupon8));
+        List<Coupon> customerCoupons2 = new ArrayList<>(Arrays.asList(coupon3, coupon4, coupon5, coupon9));
+        List<Coupon> customerCoupons3 = new ArrayList<>(Arrays.asList(coupon4, coupon5, coupon6, coupon7));
 
         adminService.addCustomer(customer1);
         adminService.addCustomer(customer2);
         adminService.addCustomer(customer3);
         adminService.addCustomer(customer4);
         adminService.addCustomer(customer5);
+        adminService.addCustomer(customer6);
+        adminService.addCustomer(customer7);
+        adminService.addCustomer(customer8);
+        adminService.addCustomer(customer9);
+        adminService.addCustomer(customer10);
 
         customer1.setCoupons(customerCoupons1);
         customer2.setCoupons(customerCoupons2);

@@ -1,6 +1,7 @@
 package com.AlbertAbuav.Project002Coupons.service;
 
 import com.AlbertAbuav.Project002Coupons.beans.Company;
+import com.AlbertAbuav.Project002Coupons.beans.Coupon;
 import com.AlbertAbuav.Project002Coupons.beans.Customer;
 import com.AlbertAbuav.Project002Coupons.exception.invalidAdminException;
 import com.AlbertAbuav.Project002Coupons.repositories.CompanyRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AdminService extends ClientFacade{
@@ -47,7 +49,14 @@ public class AdminService extends ClientFacade{
      *
      * @param company Company
      */
-    public void addCompany(Company company) {
+    public void addCompany(Company company) throws invalidAdminException {
+        if (Objects.isNull(company)) {
+            throw new invalidAdminException("There is no customer like the one you entered!");
+        } else if (companyRepository.existsByName(company.getName())) {
+            throw new invalidAdminException("The name of the company you are trying to add already appears in the system.\nCompanies with the same name cannot be added!");
+        } else if (companyRepository.existsByEmail(company.getEmail())) {
+            throw new invalidAdminException("The email of the company you are trying to add already appears in the system.\nCompanies with the same email cannot be added!");
+        }
         companyRepository.save(company);
     }
 
@@ -58,7 +67,16 @@ public class AdminService extends ClientFacade{
      *
      * @param company Company
      */
-    public void updateCompany(Company company) {
+    public void updateCompany(Company company) throws invalidAdminException {
+        if (Objects.isNull(company)) {
+            throw new invalidAdminException("There is no customer like you entered!");
+        }
+        Company toCompare = companyRepository.findByName(company.getName());
+        if (Objects.isNull(toCompare)) {
+            throw new invalidAdminException("No company matching the name: \"" + company.getName() + "\", was found:");
+        } else if (company.getId() != toCompare.getId()) {
+            throw new invalidAdminException("The company id or name cannot be updated");
+        }
         companyRepository.saveAndFlush(company);
     }
 
@@ -78,8 +96,12 @@ public class AdminService extends ClientFacade{
      *
      * @return List
      */
-    public List<Company> getAllCompanies() {
-        return companyRepository.findAll();
+    public List<Company> getAllCompanies() throws invalidAdminException {
+        List<Company> companies = companyRepository.findAll();
+        if (companies.size() == 0) {
+            throw new invalidAdminException("There are no companies in the system");
+        }
+        return companies;
     }
 
     /**
@@ -88,7 +110,13 @@ public class AdminService extends ClientFacade{
      * @param id int
      * @return Company
      */
-    public Company getSingleCompany(int id) {
+    public Company getSingleCompany(int id) throws invalidAdminException {
+        if (id <= 0) {
+            throw new invalidAdminException("There is no id like you enter !");
+        }
+        if (!companyRepository.existsById(id)) {
+            throw new invalidAdminException("No Company was found by this id!");
+        }
         return companyRepository.getOne(id);
     }
 

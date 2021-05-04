@@ -10,5 +10,9 @@ import java.util.List;
 public interface CompanyRepository extends JpaRepository<Company, Integer> {
 
     boolean existsByEmailAndPassword(String email, String password);
+    boolean existsByName(String name);
+    boolean existsByEmail(String email);
+    boolean existsById(int id);
     Company findByEmailAndPassword(String email, String password);
+    Company findByName(String name);
 }

@@ -1,8 +1,6 @@
 package com.AlbertAbuav.Project002Coupons.clr;
 
-import com.AlbertAbuav.Project002Coupons.beans.Category;
 import com.AlbertAbuav.Project002Coupons.beans.Company;
-import com.AlbertAbuav.Project002Coupons.beans.Coupon;
 import com.AlbertAbuav.Project002Coupons.exception.invalidAdminException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCompanyException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCustomerException;
@@ -19,12 +17,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
-@Order(3)
-public class CompanyServiceTest implements CommandLineRunner {
+@Order(5)
+public class DeletingData01 implements CommandLineRunner {
 
     private final ChartUtils chartUtils;
 
@@ -38,22 +34,23 @@ public class CompanyServiceTest implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        Colors.setCyanBoldPrint(ArtUtils.COMPANY_SERVICE);
+        Colors.setGreenBoldPrint(ArtUtils.DELETING_DATA_01);
 
-        /**
-         * Login to Admin Service
-         */
         try {
             adminService = (AdminService) loginManager.login("admin@admin.com", "admin", ClientType.ADMINISTRATOR);
         } catch (invalidCompanyException | invalidCustomerException | invalidAdminException e) {
             System.out.println(e.getMessage());
         }
 
-        TestUtils.testCompanyInfo("Login to Company number 2");
+        TestUtils.testAdminInfo("Delete Company");
+
+        TestUtils.testAdminInfo("Delete Customer");
+
+        TestUtils.testCompanyInfo("Login to Company number 3");
 
         Company toConnect = null;
         try {
-            toConnect = adminService.getSingleCompany(2);
+            toConnect = adminService.getSingleCompany(3);
         } catch (invalidAdminException e) {
             System.out.println(e.getMessage());
         }
@@ -67,30 +64,8 @@ public class CompanyServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
-        TestUtils.testCompanyInfo("Get the logged Company Details");
-
-        TestUtils.testCompanyInfo("Get Single Coupon");
-
-        TestUtils.testCompanyInfo("Adding a Coupon to the company");
-
-        TestUtils.testCompanyInfo("Updating a Companies Coupon");
-
-        TestUtils.testCompanyInfo("Get all the Company Coupons");
-
-        chartUtils.printCoupons(companyService.getAllCompanyCoupons());
-
-        TestUtils.testCompanyInfo("Get all the Company Coupons of a specific Category");
-
-        Category testCategory = companyService.getSingleCoupon(3).getCategory();
-        System.out.println("This is the Category for testing: " + testCategory + ", and this is it's ordinal number: " + testCategory.ordinal());
-
-        chartUtils.printCoupons(companyService.getAllCompanyCouponsOfSpecificCategory(testCategory));
-
-        TestUtils.testCompanyInfo("Get all Company Coupons up to a maximum price");
-
-        chartUtils.printCoupons(companyService.getAllCompanyCouponsUpToMaxPrice(100));
-
-        TestUtils.testCompanyInfo("Get all the Company Customers of a single Coupon by Coupon ID");
+        TestUtils.testCompanyInfo("Delete a Company Coupon");
 
     }
+
 }

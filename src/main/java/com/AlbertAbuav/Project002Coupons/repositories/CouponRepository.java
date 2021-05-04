@@ -1,5 +1,6 @@
 package com.AlbertAbuav.Project002Coupons.repositories;
 
+import com.AlbertAbuav.Project002Coupons.beans.Category;
 import com.AlbertAbuav.Project002Coupons.beans.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import java.util.List;
 public interface CouponRepository extends JpaRepository<Coupon, Integer> {
 
     List<Coupon> findByCompanyID(int companyID);
-    List<Coupon> findByCompanyIDAndCategory(int companyID, int category);
+    List<Coupon> findByCompanyIDAndCategory(int companyID, Category category);
     List<Coupon> findByCompanyIDAndPriceLessThan(int companyID, double maxPrice);
     List<Coupon> findAllByCustomers_Id(int customerID);
     List<Coupon> findAllByCustomers_IdAndCategory(int customerID, int category);

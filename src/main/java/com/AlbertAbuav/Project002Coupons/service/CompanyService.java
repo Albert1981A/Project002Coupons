@@ -96,7 +96,7 @@ public class CompanyService extends ClientFacade {
      * @return List
      */
     public List<Coupon> getAllCompanyCouponsOfSpecificCategory(Category category) {
-        return couponRepository.findByCompanyIDAndCategory(companyID, category.ordinal());
+        return couponRepository.findByCompanyIDAndCategory(companyID, category);
     }
 
     /**

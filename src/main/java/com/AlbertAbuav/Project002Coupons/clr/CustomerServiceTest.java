@@ -1,6 +1,5 @@
 package com.AlbertAbuav.Project002Coupons.clr;
 
-import com.AlbertAbuav.Project002Coupons.beans.Coupon;
 import com.AlbertAbuav.Project002Coupons.beans.Customer;
 import com.AlbertAbuav.Project002Coupons.exception.invalidAdminException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCompanyException;
@@ -12,6 +11,7 @@ import com.AlbertAbuav.Project002Coupons.service.CustomerService;
 import com.AlbertAbuav.Project002Coupons.utils.ArtUtils;
 import com.AlbertAbuav.Project002Coupons.utils.ChartUtils;
 import com.AlbertAbuav.Project002Coupons.utils.Colors;
+import com.AlbertAbuav.Project002Coupons.utils.TestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -47,6 +47,8 @@ public class CustomerServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
+        TestUtils.testCustomerInfo("Login to Customer number 2");
+
         Customer toConnect2 = adminService.getSingleCustomer(2);
 
         /**
@@ -58,13 +60,20 @@ public class CustomerServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
-        System.out.println("-----------------------------------------------");
+        TestUtils.testCustomerInfo("Get the logged Customer details");
 
-        List<Coupon> customerCoupons = customerService.getAllCustomerCoupons();
-        chartUtils.printCoupons(customerCoupons);
+        TestUtils.testCustomerInfo("adding Coupon to Customer");
 
-        System.out.println("-----------------------------------------------");
+        TestUtils.testCustomerInfo("Get all Customer Coupons");
 
-        customerService.findAllCustomersByCouponId(3).forEach(System.out::println);
+        chartUtils.printCoupons(customerService.getAllCustomerCoupons());
+
+        TestUtils.testCustomerInfo("Get all Customer Coupons of a specific Category");
+
+        TestUtils.testCustomerInfo("Get all Customer Coupons up to a maximum Price");
+
+        TestUtils.testCustomerInfo("Find all Customers by a Coupon ID");
+
+        chartUtils.printCustomers(customerService.findAllCustomersByCouponId(3));
     }
 }

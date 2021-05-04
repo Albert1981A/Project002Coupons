@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -22,21 +20,24 @@ public class FactoryUtils {
 
     @Autowired
     private CompanyRepository companyRepository;
+
     /**
      * This method generate a random customer first name.
+     *
      * @return String
      */
     public String generateFirstName() {
-        FirstName firstName = FirstName.values()[(int)(Math.random() * FirstName.values().length)];
+        FirstName firstName = FirstName.values()[(int) (Math.random() * FirstName.values().length)];
         return firstName.toString();
     }
 
     /**
      * This method generate a random customer last name.
+     *
      * @return String
      */
     public String generateLastName() {
-        LastName lastName = LastName.values()[(int)(Math.random() * LastName.values().length)];
+        LastName lastName = LastName.values()[(int) (Math.random() * LastName.values().length)];
         return lastName.toString();
     }
 
@@ -45,40 +46,30 @@ public class FactoryUtils {
      * There can be no two identical company names!
      * The method checks in the data base if the name exists before sending it.
      * If the name exist it's changes.
+     *
      * @return String
      */
     public String generateCompanyName() {
-        String companyName = CompaniesType.values()[(int)(Math.random() * CompaniesType.values().length)].toString();
-        List<Company> companyList = companyRepository.findAll();
-        if (companyList.size() == 0) {
-            return companyName;
-        }
-        boolean isExist = true;
-        while (isExist) {
-            for (Company company : companyList) {
-                if (companyName.equals(company.getName())) {
-                    isExist = true;
-                    companyName = CompaniesType.values()[(int)(Math.random() * CompaniesType.values().length)].toString();
-                    break;
-                } else {
-                    isExist = false;
-                }
-            }
+        String companyName = CompaniesType.values()[(int) (Math.random() * CompaniesType.values().length)].toString();
+        while (companyRepository.existsByName(companyName)) {
+            companyName = CompaniesType.values()[(int) (Math.random() * CompaniesType.values().length)].toString();
         }
         return companyName;
     }
 
     /**
      * This method generate a random ending for a customers mail.
+     *
      * @return String
      */
     public String generateCustomerEmailType() {
-        EmailType emailType = EmailType.values()[(int)(Math.random() * EmailType.values().length)];
+        EmailType emailType = EmailType.values()[(int) (Math.random() * EmailType.values().length)];
         return "@" + emailType.toString() + ".com";
     }
 
     /**
      * This method generate a random 8 figure password.
+     *
      * @return String
      */
     public String createPassword() {
@@ -119,20 +110,20 @@ public class FactoryUtils {
     }
 
     public String createCompanyEmail(String name) {
-        String email = generateFirstName()+"@" + name + ".com";
+        String email = generateFirstName() + "@" + name + ".com";
         return email.toLowerCase(Locale.ROOT);
     }
 
     public Coupon createCoupon() {
         return Coupon.builder()
                 .companyID(COUNT2)
-                .category(Category.values()[(int)(Math.random()*Category.values().length)])
+                .category(Category.values()[(int) (Math.random() * Category.values().length)])
                 .title("Title: " + COUNT2)
                 .description("Description: " + COUNT2)
                 .startDate(DateUtils.javaDateFromLocalDate(LocalDate.now().minusDays(3)))
                 .endDate(DateUtils.javaDateFromLocalDate(LocalDate.now().plusDays(7)))
-                .amount((int)(Math.random()*21)+30)
-                .price((int)(Math.random()*41)+60)
+                .amount((int) (Math.random() * 21) + 30)
+                .price((int) (Math.random() * 41) + 60)
                 .image("Image: " + COUNT2++)
                 .build();
     }
@@ -140,13 +131,13 @@ public class FactoryUtils {
     public Coupon createCouponOfACompany(int companyID) {
         return Coupon.builder()
                 .companyID(companyID)
-                .category(Category.values()[(int)(Math.random()*Category.values().length)])
+                .category(Category.values()[(int) (Math.random() * Category.values().length)])
                 .title("Title: " + COUNT2)
                 .description("Description: " + COUNT2)
                 .startDate(DateUtils.javaDateFromLocalDate(LocalDate.now().minusDays(3)))
                 .endDate(DateUtils.javaDateFromLocalDate(LocalDate.now().plusDays(7)))
-                .amount((int)(Math.random()*21)+30)
-                .price((int)(Math.random()*41)+60)
+                .amount((int) (Math.random() * 21) + 30)
+                .price((int) (Math.random() * 41) + 60)
                 .image("Image: " + COUNT2++)
                 .build();
     }
