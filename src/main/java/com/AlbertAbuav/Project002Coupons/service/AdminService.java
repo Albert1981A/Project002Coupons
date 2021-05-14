@@ -1,7 +1,6 @@
 package com.AlbertAbuav.Project002Coupons.service;
 
 import com.AlbertAbuav.Project002Coupons.beans.Company;
-import com.AlbertAbuav.Project002Coupons.beans.Coupon;
 import com.AlbertAbuav.Project002Coupons.beans.Customer;
 import com.AlbertAbuav.Project002Coupons.exception.invalidAdminException;
 import com.AlbertAbuav.Project002Coupons.repositories.CompanyRepository;
@@ -10,16 +9,19 @@ import com.AlbertAbuav.Project002Coupons.repositories.CustomerRepository;
 import com.AlbertAbuav.Project002Coupons.utils.ChartUtils;
 import com.AlbertAbuav.Project002Coupons.utils.Colors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
+@Lazy
 public class AdminService extends ClientFacade{
 
     @Autowired
     private ChartUtils chartUtils;
+
 
     public AdminService(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository) {
         super(companyRepository, customerRepository, couponRepository);
@@ -126,7 +128,13 @@ public class AdminService extends ClientFacade{
      *
      * @param customer Customer
      */
-    public void addCustomer(Customer customer) {
+    public void addCustomer(Customer customer) throws invalidAdminException {
+        if (Objects.isNull(customer)) {
+            throw new invalidAdminException("There is no customer like you entered");
+        }
+        if (customerRepository.existsByEmail(customer.getEmail())) {
+            throw new invalidAdminException("The email of the customer you are trying to add already appears in the system.\nCustomers with the same email cannot be added.");
+        }
         customerRepository.save(customer);
     }
 
@@ -136,7 +144,20 @@ public class AdminService extends ClientFacade{
      *
      * @param customer Customer
      */
-    public void updateCustomer(Customer customer) {
+    public void updateCustomer(Customer customer) throws invalidAdminException {
+        if (Objects.isNull(customer)) {
+            throw new invalidAdminException("There is no customer like you entered");
+        }
+        if (!customerRepository.existsByEmail(customer.getEmail())) {
+            if (!customerRepository.existsById(customer.getId())) {
+                throw new invalidAdminException("There is no customer like you entered in the system or the email is incorrect!");
+            }
+            customerRepository.saveAndFlush(customer);
+        }
+        Customer toCompare = customerRepository.findByEmail(customer.getEmail());
+        if (customer.getId() != toCompare.getId()) {
+            throw new invalidAdminException("The customer id cannot be updated");
+        }
         customerRepository.saveAndFlush(customer);
     }
 
@@ -165,7 +186,13 @@ public class AdminService extends ClientFacade{
      * @param id int
      * @return Customer
      */
-    public Customer getSingleCustomer(int id) {
+    public Customer getSingleCustomer(int id) throws invalidAdminException {
+        if (id <= 0) {
+            throw new invalidAdminException("There is no id like you enter !");
+        }
+        if (!customerRepository.existsById(id)) {
+            throw new invalidAdminException("There is no customer with the id: " + id);
+        }
         return customerRepository.getOne(id);
     }
 

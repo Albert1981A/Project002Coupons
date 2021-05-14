@@ -1,6 +1,5 @@
 package com.AlbertAbuav.Project002Coupons.login;
 
-import com.AlbertAbuav.Project002Coupons.beans.Customer;
 import com.AlbertAbuav.Project002Coupons.exception.invalidAdminException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCompanyException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCustomerException;
@@ -9,6 +8,7 @@ import com.AlbertAbuav.Project002Coupons.service.ClientFacade;
 import com.AlbertAbuav.Project002Coupons.service.CompanyService;
 import com.AlbertAbuav.Project002Coupons.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LoginManager {
 
-    private final AdminService adminService;
-    private final CompanyService companyService;
-    private final CustomerService customerService;
+    private final ApplicationContext ctx;
 
     /**
      * This method defines what type of client is trying to connect.
@@ -33,13 +31,13 @@ public class LoginManager {
         ClientFacade clientFacade;
         switch (clientType) {
             case ADMINISTRATOR:
-                clientFacade = adminService;
+                clientFacade = ctx.getBean(AdminService.class);
                 return (clientFacade.login(email, password)) ? clientFacade : null;
             case COMPANY:
-                clientFacade = companyService;
+                clientFacade = ctx.getBean(CompanyService.class);
                 return (clientFacade.login(email, password)) ? clientFacade : null;
             case CUSTOMER:
-                clientFacade = customerService;
+                clientFacade = ctx.getBean(CustomerService.class);
                 return (clientFacade.login(email, password)) ? clientFacade : null;
         }
         return null;

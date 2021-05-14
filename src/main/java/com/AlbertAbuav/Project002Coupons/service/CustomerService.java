@@ -67,7 +67,10 @@ public class CustomerService extends ClientFacade {
      *
      * @return List
      */
-    public List<Coupon> getAllCustomerCoupons() {
+    public List<Coupon> getAllCustomerCoupons() throws invalidCustomerException {
+        if (!couponRepository.existsByCustomers_Id(customerID)) {
+            throw new invalidCustomerException("Their is no Coupons to the Logged customer");
+        }
         return couponRepository.findAllByCustomers_Id(customerID);
     }
 
@@ -78,8 +81,11 @@ public class CustomerService extends ClientFacade {
      * @param category Category
      * @return List
      */
-    public List<Coupon> getAllCustomerCouponsOfSpecificCategory(Category category) {
-        return couponRepository.findAllByCustomers_IdAndCategory(customerID, category.ordinal());
+    public List<Coupon> getAllCustomerCouponsOfSpecificCategory(Category category) throws invalidCustomerException {
+        if (!couponRepository.existsByCustomers_IdAndCategory(customerID, category)) {
+            throw new invalidCustomerException("Their is no Coupons of that category to the Logged customer");
+        }
+        return couponRepository.findAllByCustomers_IdAndCategory(customerID, category);
     }
 
     /**
@@ -89,7 +95,10 @@ public class CustomerService extends ClientFacade {
      * @param maxPrice double
      * @return List coupons
      */
-    public List<Coupon> getAllCustomerCouponsUpToMaxPrice(double maxPrice) {
+    public List<Coupon> getAllCustomerCouponsUpToMaxPrice(double maxPrice) throws invalidCustomerException {
+        if (!couponRepository.existsByCustomers_IdAndPriceLessThan(customerID, maxPrice)) {
+            throw new invalidCustomerException("Their is no Coupons fo that max price to the Logged customer");
+        }
         return couponRepository.findAllByCustomers_IdAndPriceLessThan(customerID, maxPrice);
     }
 

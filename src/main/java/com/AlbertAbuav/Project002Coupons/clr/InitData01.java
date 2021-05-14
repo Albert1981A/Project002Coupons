@@ -114,24 +114,32 @@ public class InitData01 implements CommandLineRunner {
         List<Coupon> customerCoupons2 = new ArrayList<>(Arrays.asList(coupon3, coupon4, coupon5, coupon9));
         List<Coupon> customerCoupons3 = new ArrayList<>(Arrays.asList(coupon4, coupon5, coupon6, coupon7));
 
-        adminService.addCustomer(customer1);
-        adminService.addCustomer(customer2);
-        adminService.addCustomer(customer3);
-        adminService.addCustomer(customer4);
-        adminService.addCustomer(customer5);
-        adminService.addCustomer(customer6);
-        adminService.addCustomer(customer7);
-        adminService.addCustomer(customer8);
-        adminService.addCustomer(customer9);
-        adminService.addCustomer(customer10);
+        try {
+            adminService.addCustomer(customer1);
+            adminService.addCustomer(customer2);
+            adminService.addCustomer(customer3);
+            adminService.addCustomer(customer4);
+            adminService.addCustomer(customer5);
+            adminService.addCustomer(customer6);
+            adminService.addCustomer(customer7);
+            adminService.addCustomer(customer8);
+            adminService.addCustomer(customer9);
+            adminService.addCustomer(customer10);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
 
         customer1.setCoupons(customerCoupons1);
         customer2.setCoupons(customerCoupons2);
         customer3.setCoupons(customerCoupons3);
 
-        adminService.updateCustomer(customer1);
-        adminService.updateCustomer(customer2);
-        adminService.updateCustomer(customer3);
+        try {
+            adminService.updateCustomer(customer1);
+            adminService.updateCustomer(customer2);
+            adminService.updateCustomer(customer3);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
 
         chartUtils.printCustomers(adminService.getAllCustomers());
 

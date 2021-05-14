@@ -10,7 +10,10 @@ import java.util.List;
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     boolean existsByEmailAndPassword(String email, String password);
+    boolean existsByEmail(String email);
+    boolean existsById(int id);
     Customer findByEmailAndPassword(String email, String password);
+    Customer findByEmail(String email);
     List<Customer> findAllByCoupons_Id(int couponID);
 
 

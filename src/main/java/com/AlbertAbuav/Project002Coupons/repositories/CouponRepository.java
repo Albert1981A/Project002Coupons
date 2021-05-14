@@ -14,8 +14,11 @@ public interface CouponRepository extends JpaRepository<Coupon, Integer> {
     List<Coupon> findByCompanyIDAndCategory(int companyID, Category category);
     List<Coupon> findByCompanyIDAndPriceLessThan(int companyID, double maxPrice);
     List<Coupon> findAllByCustomers_Id(int customerID);
-    List<Coupon> findAllByCustomers_IdAndCategory(int customerID, int category);
+    boolean existsByCustomers_Id(int customerID);
+    List<Coupon> findAllByCustomers_IdAndCategory(int customerID, Category category);
+    boolean existsByCustomers_IdAndCategory(int customerID, Category category);
     List<Coupon> findAllByCustomers_IdAndPriceLessThan(int customerID, double maxPrice);
+    boolean existsByCustomers_IdAndPriceLessThan(int customerID, double maxPrice);
 
     /**
      * 10% Query("...")

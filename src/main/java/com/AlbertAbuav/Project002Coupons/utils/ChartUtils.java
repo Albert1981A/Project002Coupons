@@ -108,10 +108,6 @@ public class ChartUtils {
     public void printCustomers (List<Customer> customers) {
         printCustomerHeader();
         for (Customer customer : customers) {
-            List<Coupon> temp = couponRepository.findAllByCustomers_Id(customer.getId());
-            if (temp.size() != 0) {
-                customer.setCoupons(temp);
-            }
             printCustomerDetails(customer);
         }
         System.out.println();

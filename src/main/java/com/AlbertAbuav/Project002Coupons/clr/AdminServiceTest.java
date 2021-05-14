@@ -1,6 +1,7 @@
 package com.AlbertAbuav.Project002Coupons.clr;
 
 import com.AlbertAbuav.Project002Coupons.beans.Company;
+import com.AlbertAbuav.Project002Coupons.beans.Customer;
 import com.AlbertAbuav.Project002Coupons.exception.invalidAdminException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCompanyException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCustomerException;
@@ -180,9 +181,68 @@ public class AdminServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
-        TestUtils.testAdminInfo("Adding Customer");
+        TestUtils.testAdminInfo("Attempting to add a Customer with an existing email");
 
-        TestUtils.testAdminInfo("Update Customer");
+        Customer customerToAdd1 = null;
+        try {
+            customerToAdd1 = Customer.builder()
+                    .firstName("Sample")
+                    .lastName("Sample")
+                    .email(adminService.getSingleCustomer(4).getEmail())
+                    .password("1234")
+                    .build();
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("This is the customer to add:");
+        chartUtils.printCustomer(customerToAdd1);
+        System.out.println("Attempting to add the Customer:");
+        try {
+            adminService.addCustomer(customerToAdd1);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testAdminInfo("Update Customer name");
+
+        Customer customerToUpdate1 = null;
+        try {
+            customerToUpdate1 = adminService.getSingleCustomer(9);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("The Customer to update hes name");
+        chartUtils.printCustomer(customerToUpdate1);
+        customerToUpdate1.setFirstName("New-Name");
+        try {
+            adminService.updateCustomer(customerToUpdate1);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Customer after the update:");
+        try {
+            chartUtils.printCustomer(adminService.getSingleCustomer(9));
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testAdminInfo("Attempting to update Customer id");
+
+        Customer customerToUpdate2 = null;
+        try {
+            customerToUpdate2 = adminService.getSingleCustomer(10);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("The Customer to update hes id");
+        chartUtils.printCustomer(customerToUpdate2);
+        customerToUpdate2.setId(4);
+        System.out.println("Attempting to update hes id");
+        try {
+            adminService.updateCustomer(customerToUpdate2);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
 
         TestUtils.testAdminInfo("Get all Customers");
 
