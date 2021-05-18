@@ -176,8 +176,12 @@ public class AdminService extends ClientFacade{
      *
      * @return List
      */
-    public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+    public List<Customer> getAllCustomers() throws invalidAdminException {
+        List<Customer> customers = customerRepository.findAll();
+        if (customers.size() == 0) {
+            throw new invalidAdminException("There are no customers in the system");
+        }
+        return customers;
     }
 
     /**

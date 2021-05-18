@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Scope("prototype")
@@ -53,8 +54,19 @@ public class CompanyService extends ClientFacade {
      *
      * @param coupon Coupon
      */
-    public void addCoupon(Coupon coupon) {
-        couponRepository.save(coupon);
+    public void addCoupon(Coupon coupon) throws invalidCompanyException {
+        if (Objects.isNull(coupon)) {
+            throw new invalidCompanyException("There is no coupon like you entered");
+        }
+        if (!companyRepository.existsById(coupon.getCompanyID())) {
+            throw new invalidCompanyException("The Company id \"" + coupon.getCompanyID() + "\" doesn't appears in the data base");
+        }
+        if (couponRepository.existsByCompanyIDAndTitle(coupon.getCompanyID(), coupon.getTitle())) {
+            throw new invalidCompanyException("Cannot add a coupon with the same title to an existing coupon of the same company!");
+        }
+        Company company = companyRepository.getOne(coupon.getCompanyID());
+        company.getCoupons().add(coupon);
+        companyRepository.saveAndFlush(company);
     }
 
     /**
@@ -126,7 +138,10 @@ public class CompanyService extends ClientFacade {
      * @param id int
      * @return Coupon
      */
-    public Coupon getSingleCoupon(int id) {
+    public Coupon getSingleCoupon(int id) throws invalidCompanyException {
+        if (!couponRepository.existsById(id)) {
+            throw new invalidCompanyException("Their is no coupon for the couponID: \"" + id + "\" you entered!");
+        }
         return couponRepository.getOne(id);
     }
 

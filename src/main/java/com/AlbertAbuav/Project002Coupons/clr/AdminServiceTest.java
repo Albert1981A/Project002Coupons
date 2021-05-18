@@ -246,19 +246,19 @@ public class AdminServiceTest implements CommandLineRunner {
 
         TestUtils.testAdminInfo("Get all Customers");
 
+        try {
+            chartUtils.printCustomers(adminService.getAllCustomers());
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+
         TestUtils.testAdminInfo("Get single Customer");
 
-
-
-
-
-
-
-
-
-
-
-
+        try {
+            chartUtils.printCustomer(adminService.getSingleCustomer(3));
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 }

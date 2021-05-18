@@ -64,7 +64,6 @@ public class ChartUtils {
     public void printCompany (Company company) {
         printCompanyHeader();
         printCompanyDetails(company);
-        System.out.println();
     }
 
     public void printCompanies (List<Company> companies) {
@@ -76,7 +75,6 @@ public class ChartUtils {
             }
             printCompanyDetails(company);
         }
-        System.out.println();
     }
 
 
@@ -102,7 +100,6 @@ public class ChartUtils {
     public void printCustomer (Customer customer) {
         printCustomerHeader();
         printCustomerDetails(customer);
-        System.out.println();
     }
 
     public void printCustomers (List<Customer> customers) {
@@ -110,7 +107,6 @@ public class ChartUtils {
         for (Customer customer : customers) {
             printCustomerDetails(customer);
         }
-        System.out.println();
     }
 
 //==========================================================
@@ -131,7 +127,6 @@ public class ChartUtils {
     public void printCoupon (Coupon coupon) {
         printCouponHeader();
         printCouponDetails(coupon);
-        System.out.println();
     }
 
     public void printCoupons (List<Coupon> coupons) {

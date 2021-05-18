@@ -41,13 +41,48 @@ public class InitData01 implements CommandLineRunner {
 
         Colors.setGreenBoldPrint(ArtUtils.INIT_DATA_01);
 
-        TestUtils.testAdminInfo("Adding Companies");
+
+        TestUtils.testAdminInfo("Connecting to AdminService");
 
         try {
             adminService = (AdminService) loginManager.login("admin@admin.com", "admin", ClientType.ADMINISTRATOR);
         } catch (invalidCompanyException | invalidCustomerException | invalidAdminException e) {
             System.out.println(e.getMessage());
         }
+
+        TestUtils.testAdminInfo("Get all Companies when their are no Companies in the data base");
+
+        try {
+            chartUtils.printCompanies(adminService.getAllCompanies());
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testAdminInfo("Get single Company when their are no Companies in the data base");
+
+        try {
+            chartUtils.printCompany(adminService.getSingleCompany(3));
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testAdminInfo("Get all Customers when their are no Customers in the data base");
+        try {
+            chartUtils.printCustomers(adminService.getAllCustomers());
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testAdminInfo("Get s single Customer when their are no Customers in the data base");
+
+        try {
+            chartUtils.printCustomer(adminService.getSingleCustomer(3));
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testAdminInfo("Adding Companies");
+
         Coupon coupon1 = factoryUtils.createCouponOfACompany(1);
         Coupon coupon2 = factoryUtils.createCouponOfACompany(1);
         Coupon coupon3 = factoryUtils.createCouponOfACompany(1);
@@ -141,7 +176,11 @@ public class InitData01 implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
-        chartUtils.printCustomers(adminService.getAllCustomers());
+        try {
+            chartUtils.printCustomers(adminService.getAllCustomers());
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 
