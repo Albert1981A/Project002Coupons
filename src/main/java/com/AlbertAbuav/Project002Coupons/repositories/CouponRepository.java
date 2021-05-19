@@ -11,18 +11,19 @@ import java.util.List;
 public interface CouponRepository extends JpaRepository<Coupon, Integer> {
 
     List<Coupon> findByCompanyID(int companyID);
+    boolean existsByCompanyIDAndCategory(int companyID, Category category);
     List<Coupon> findByCompanyIDAndCategory(int companyID, Category category);
+    boolean existsByCompanyIDAndPriceLessThan(int companyID, double maxPrice);
     List<Coupon> findByCompanyIDAndPriceLessThan(int companyID, double maxPrice);
     List<Coupon> findAllByCustomers_Id(int customerID);
-    List<Coupon> findByTitle(String title);
-    boolean existsByTitle(String title);
     boolean existsByCompanyIDAndTitle(int customerID, String title);
-    boolean existsByCompanyIDAndId(int customerID, int id);
+    boolean existsByIdAndCompanyID(int id, int companyID);
     boolean existsByCustomers_Id(int customerID);
     List<Coupon> findAllByCustomers_IdAndCategory(int customerID, Category category);
     boolean existsByCustomers_IdAndCategory(int customerID, Category category);
     List<Coupon> findAllByCustomers_IdAndPriceLessThan(int customerID, double maxPrice);
     boolean existsByCustomers_IdAndPriceLessThan(int customerID, double maxPrice);
+    boolean existsByCustomers_IdAndId(int customerID, int couponID);
 
     /**
      * 10% Query("...")

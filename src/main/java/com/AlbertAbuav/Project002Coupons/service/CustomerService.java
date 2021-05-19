@@ -9,11 +9,14 @@ import com.AlbertAbuav.Project002Coupons.repositories.CouponRepository;
 import com.AlbertAbuav.Project002Coupons.repositories.CustomerRepository;
 import com.AlbertAbuav.Project002Coupons.utils.ChartUtils;
 import com.AlbertAbuav.Project002Coupons.utils.Colors;
+import com.AlbertAbuav.Project002Coupons.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Scope("prototype")
@@ -57,8 +60,21 @@ public class CustomerService extends ClientFacade {
      *
      * @param coupon Coupon
      */
-    public void addCoupon(Coupon coupon) {
-        couponRepository.save(coupon);
+    public void addCoupon(Coupon coupon) throws invalidCustomerException {
+        if (Objects.isNull(coupon)) {
+            throw new invalidCustomerException("There is no coupon like you entered!");
+        }
+        if (coupon.getAmount() == 0) {
+            throw new invalidCustomerException("The coupon id-" + coupon.getId() + " is out of stock!");
+        } else if (coupon.getEndDate().before(DateUtils.javaDateFromLocalDate(LocalDate.now()))) {
+            throw new invalidCustomerException("The coupon id-" + coupon.getId() + " has expired!");
+        } else if (couponRepository.existsByCustomers_IdAndId(customerID, coupon.getId())) {
+            throw new invalidCustomerException("You already purchase coupon id-" + coupon.getId() + ". You cannot purchase the same coupon more than once!");
+        }
+        Customer loggedCustomer = customerRepository.getOne(customerID);
+        coupon.setAmount((coupon.getAmount()) - 1);
+        loggedCustomer.getCoupons().add(coupon);
+        customerRepository.saveAndFlush(loggedCustomer);
     }
 
     /**

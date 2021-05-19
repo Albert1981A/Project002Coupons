@@ -1,5 +1,6 @@
 package com.AlbertAbuav.Project002Coupons.clr;
 
+import com.AlbertAbuav.Project002Coupons.beans.Coupon;
 import com.AlbertAbuav.Project002Coupons.beans.Customer;
 import com.AlbertAbuav.Project002Coupons.exception.invalidAdminException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCompanyException;
@@ -8,15 +9,13 @@ import com.AlbertAbuav.Project002Coupons.login.ClientType;
 import com.AlbertAbuav.Project002Coupons.login.LoginManager;
 import com.AlbertAbuav.Project002Coupons.service.AdminService;
 import com.AlbertAbuav.Project002Coupons.service.CustomerService;
-import com.AlbertAbuav.Project002Coupons.utils.ArtUtils;
-import com.AlbertAbuav.Project002Coupons.utils.ChartUtils;
-import com.AlbertAbuav.Project002Coupons.utils.Colors;
-import com.AlbertAbuav.Project002Coupons.utils.TestUtils;
+import com.AlbertAbuav.Project002Coupons.utils.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -86,9 +85,82 @@ public class CustomerServiceTest implements CommandLineRunner {
 
         TestUtils.testCustomerInfo("Get the logged Customer details");
 
+        System.out.println("The details of the logged customer id-2");
         chartUtils.printCustomer(customerService.getTheLoggedCustomerDetails());
+        System.out.println();
+        System.out.println("The details of the logged customer id-4");
+        chartUtils.printCustomer(customerService2.getTheLoggedCustomerDetails());
 
-        TestUtils.testCustomerInfo("adding Coupon to Customer");
+        TestUtils.testCustomerInfo("adding Coupon to Customer id-2");
+
+        Coupon couponToAdd1 = null;
+        try {
+            couponToAdd1 = adminService.getSingleCompany(1).getCoupons().get(1);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("The Coupon to add:");
+        chartUtils.printCoupon(couponToAdd1);
+        try {
+            customerService.addCoupon(couponToAdd1);
+        } catch (invalidCustomerException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println();
+        System.out.println("This is the Customer after adding the Coupon");
+        try {
+            chartUtils.printCustomer(adminService.getSingleCustomer(2));
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCustomerInfo("Attempt to add a Coupon that is out of stock");
+
+        Coupon couponToAdd2 = null;
+        try {
+            couponToAdd2 = adminService.getSingleCompany(1).getCoupons().get(0);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+        couponToAdd2.setAmount(0);
+        System.out.println("The coupon to add:");
+        chartUtils.printCoupon(couponToAdd2);
+        System.out.println();
+        try {
+            customerService.addCoupon(couponToAdd2);
+        } catch (invalidCustomerException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCustomerInfo("Attempt to add a coupon that has been expired");
+
+        couponToAdd2.setAmount(7);
+        couponToAdd2.setEndDate(DateUtils.javaDateFromLocalDate(LocalDate.now().minusDays(1)));
+        System.out.println("The coupon to add:");
+        chartUtils.printCoupon(couponToAdd2);
+        System.out.println();
+        try {
+            customerService.addCoupon(couponToAdd2);
+        } catch (invalidCustomerException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCustomerInfo("Attempt to add a coupon that the Customer already purchased");
+
+        Coupon couponToAdd3 = null;
+        try {
+            couponToAdd3 = customerService.getAllCustomerCoupons().get(0);
+        } catch (invalidCustomerException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("The coupon to add:");
+        chartUtils.printCoupon(couponToAdd3);
+        System.out.println();
+        try {
+            customerService.addCoupon(couponToAdd3);
+        } catch (invalidCustomerException e) {
+            System.out.println(e.getMessage());
+        }
 
         TestUtils.testCustomerInfo("Get all Customer Coupons");
 
@@ -123,6 +195,7 @@ public class CustomerServiceTest implements CommandLineRunner {
         }
 
         TestUtils.testCustomerInfo("Get all Customer Coupons up to a maximum Price");
+
         System.out.println("The customer coupons:");
         chartUtils.printCoupons(toConnect2.getCoupons());
         double maxPrice = toConnect2.getCoupons().get(0).getPrice();
@@ -142,8 +215,7 @@ public class CustomerServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
-        TestUtils.testCustomerInfo("Find all Customers by a Coupon ID");
-
+        TestUtils.testCustomerInfo("Find all Customers by a Coupon ID-3");
         chartUtils.printCustomers(customerService.findAllCustomersByCouponId(3));
     }
 }

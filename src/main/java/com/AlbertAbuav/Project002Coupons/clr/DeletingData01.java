@@ -42,10 +42,6 @@ public class DeletingData01 implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
-        TestUtils.testAdminInfo("Delete Company");
-
-        TestUtils.testAdminInfo("Delete Customer");
-
         TestUtils.testCompanyInfo("Login to Company number 3");
 
         Company toConnect = null;
@@ -65,6 +61,10 @@ public class DeletingData01 implements CommandLineRunner {
         }
 
         TestUtils.testCompanyInfo("Delete a Company Coupon");
+
+        TestUtils.testAdminInfo("Delete Company");
+
+        TestUtils.testAdminInfo("Delete Customer");
 
     }
 

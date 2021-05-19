@@ -272,6 +272,14 @@ public class CompanyServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
+        System.out.println("The coupon after the update:");
+        try {
+            chartUtils.printCoupon(companyService.getSingleCoupon(4));
+            chartUtils.printCoupon(companyService.getSingleCoupon(5));
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+
         TestUtils.testCompanyInfo("Attempt to Update a coupons company id");
 
         try {
@@ -286,6 +294,12 @@ public class CompanyServiceTest implements CommandLineRunner {
         chartUtils.printCoupon(couponToUpdate1);
         try {
             companyService.updateCoupon(couponToUpdate1);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("The coupon after the update:");
+        try {
+            chartUtils.printCoupon(companyService.getSingleCoupon(4));
         } catch (invalidCompanyException e) {
             System.out.println(e.getMessage());
         }
@@ -308,6 +322,13 @@ public class CompanyServiceTest implements CommandLineRunner {
         } catch (invalidCompanyException e) {
             System.out.println(e.getMessage());
         }
+        System.out.println("The coupon after the update:");
+        try {
+            chartUtils.printCoupon(companyService.getSingleCoupon(4));
+            chartUtils.printCoupon(companyService.getSingleCoupon(5));
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
 
         TestUtils.testCompanyInfo("Get all the Company Coupons");
 
@@ -322,7 +343,11 @@ public class CompanyServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
         System.out.println("This is the Category for testing: " + testCategory + ", and this is it's ordinal number: " + testCategory.ordinal());
-        chartUtils.printCoupons(companyService.getAllCompanyCouponsOfSpecificCategory(testCategory));
+        try {
+            chartUtils.printCoupons(companyService.getAllCompanyCouponsOfSpecificCategory(testCategory));
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
 
         TestUtils.testCompanyInfo("Get all Company Coupons up to a maximum price");
 
@@ -333,7 +358,20 @@ public class CompanyServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
         System.out.println("The max price is: " + maxPrice);
-        chartUtils.printCoupons(companyService.getAllCompanyCouponsUpToMaxPrice(maxPrice));
+
+        try {
+            chartUtils.printCoupons(companyService.getAllCompanyCouponsUpToMaxPrice(maxPrice));
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCompanyInfo("Get all Company Coupons up to a maximum price that doesn't exists");
+
+        try {
+            chartUtils.printCoupons(companyService.getAllCompanyCouponsUpToMaxPrice(1.2));
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
 
         TestUtils.testCompanyInfo("Get all the Company Customers of a single Coupon by Coupon ID");
 
