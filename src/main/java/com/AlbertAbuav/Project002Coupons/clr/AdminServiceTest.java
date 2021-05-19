@@ -260,5 +260,7 @@ public class AdminServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
+        System.out.println();
+
     }
 }

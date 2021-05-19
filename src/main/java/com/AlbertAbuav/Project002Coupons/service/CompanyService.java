@@ -76,8 +76,43 @@ public class CompanyService extends ClientFacade {
      *
      * @param coupon Coupon
      */
-    public void updateCoupon(Coupon coupon) {
-        couponRepository.saveAndFlush(coupon);
+    public void updateCoupon(Coupon coupon) throws invalidCompanyException {
+        if (Objects.isNull(coupon)) {
+            throw new invalidCompanyException("There is no coupon like you entered!");
+        }
+        if (coupon.getCompanyID() != companyID) {
+            throw new invalidCompanyException("The \"company id\" cannot be updated");
+        }
+        Company companyToUpdate = companyRepository.getOne(coupon.getCompanyID());
+        List<Coupon> companyCoupons = companyToUpdate.getCoupons();
+        int count = 0;
+        if (couponRepository.existsByTitle(coupon.getTitle())) {
+            for (Coupon coupon1 : companyCoupons) {
+                if (coupon1.getId() == coupon.getId() && coupon1.getTitle().equals(coupon.getTitle())) {
+                    companyCoupons.set(count, coupon);
+                    companyToUpdate.setCoupons(companyCoupons);
+                    companyRepository.saveAndFlush(companyToUpdate);
+                    return;
+                }
+                count++;
+            }
+            for (Coupon coupon1 : companyCoupons) {
+                if (coupon1.getId() != coupon.getId() && coupon1.getTitle().equals(coupon.getTitle())) {
+                    throw new invalidCompanyException("The \"coupon id\" cannot be updated");
+                }
+            }
+        }
+        int count2 = 0;
+        for (Coupon coupon1 : companyCoupons) {
+            if (coupon1.getId() == coupon.getId() && !coupon1.getCategory().equals(coupon.getCategory())) {
+                throw new invalidCompanyException("The \"coupon id\" cannot be updated");
+            } else if (coupon1.getId() == coupon.getId()) {
+                companyCoupons.set(count2, coupon);
+                companyToUpdate.setCoupons(companyCoupons);
+                companyRepository.saveAndFlush(companyToUpdate);
+                count2++;
+            }
+        }
     }
 
     /**
@@ -142,6 +177,9 @@ public class CompanyService extends ClientFacade {
         if (!couponRepository.existsById(id)) {
             throw new invalidCompanyException("Their is no coupon for the couponID: \"" + id + "\" you entered!");
         }
+        if (!couponRepository.existsByCompanyIDAndId(companyID, id)) {
+            throw new invalidCompanyException("This coupon id doesn't belong to the connected company");
+        }
         return couponRepository.getOne(id);
     }
 
@@ -151,7 +189,10 @@ public class CompanyService extends ClientFacade {
      * @param couponID int
      * @return List
      */
-    public List<Customer> getAllCompanyCustomersOfASingleCouponByCouponId(int couponID) {
+    public List<Customer> getAllCompanyCustomersOfASingleCouponByCouponId(int couponID) throws invalidCompanyException {
+        if (!couponRepository.existsByCompanyIDAndId(companyID, couponID)) {
+            throw new invalidCompanyException("This coupon doesn't belong to the logged company");
+        }
         return customerRepository.findAllByCoupons_Id(couponID);
     }
 

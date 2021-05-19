@@ -182,6 +182,8 @@ public class InitData01 implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
+        System.out.println();
+
     }
 
 }

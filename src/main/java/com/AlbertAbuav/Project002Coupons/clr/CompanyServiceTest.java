@@ -3,6 +3,7 @@ package com.AlbertAbuav.Project002Coupons.clr;
 import com.AlbertAbuav.Project002Coupons.beans.Category;
 import com.AlbertAbuav.Project002Coupons.beans.Company;
 import com.AlbertAbuav.Project002Coupons.beans.Coupon;
+import com.AlbertAbuav.Project002Coupons.beans.Customer;
 import com.AlbertAbuav.Project002Coupons.exception.invalidAdminException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCompanyException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCustomerException;
@@ -72,6 +73,14 @@ public class CompanyServiceTest implements CommandLineRunner {
         TestUtils.testCompanyInfo("Get Single Coupon");
 
         try {
+            chartUtils.printCoupon(companyService.getSingleCoupon(4));
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCompanyInfo("Get Single Coupon that doesn't belong to the connected company");
+
+        try {
             chartUtils.printCoupon(companyService.getSingleCoupon(1));
         } catch (invalidCompanyException e) {
             System.out.println(e.getMessage());
@@ -116,7 +125,7 @@ public class CompanyServiceTest implements CommandLineRunner {
 
         Coupon sampleCoupon = null;
         try {
-            sampleCoupon = companyService.getSingleCoupon(2);
+            sampleCoupon = companyService.getSingleCoupon(4);
         } catch (invalidCompanyException e) {
             System.out.println(e.getMessage());
         }
@@ -187,7 +196,118 @@ public class CompanyServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
-        TestUtils.testCompanyInfo("Updating a Companies Coupon");
+        TestUtils.testCompanyInfo("Update a company coupon start date");
+
+        Coupon couponToUpdate1 = null;
+        try {
+            couponToUpdate1 = companyService.getSingleCoupon(4);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Trying to update the \"startDate\" of coupon id-4 to be \"current date\": ");
+        chartUtils.printCoupon(couponToUpdate1);
+        couponToUpdate1.setStartDate(DateUtils.javaDateFromLocalDate(LocalDate.now()));
+        System.out.println("The Coupon was set for update:");
+        chartUtils.printCoupon(couponToUpdate1);
+        try {
+            companyService.updateCoupon(couponToUpdate1);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("The coupon after the update:");
+        try {
+            chartUtils.printCoupon(companyService.getSingleCoupon(4));
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCompanyInfo("Update a company coupon amount to be 23");
+
+        System.out.println("Trying to update the \"amount\" of coupon id-4 to be \"23\": ");
+        chartUtils.printCoupon(couponToUpdate1);
+        couponToUpdate1.setAmount(23);
+        System.out.println("The Coupon was set for update:");
+        chartUtils.printCoupon(couponToUpdate1);
+        try {
+            companyService.updateCoupon(couponToUpdate1);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("The coupon after the update:");
+        try {
+            chartUtils.printCoupon(companyService.getSingleCoupon(4));
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCompanyInfo("Attempt to Update a company coupons title");
+
+        System.out.println("Trying to update the \"title\" of coupon id-4:");
+        chartUtils.printCoupon(couponToUpdate1);
+        couponToUpdate1.setTitle("New-Title");
+        System.out.println("The Coupon was set for update:");
+        chartUtils.printCoupon(couponToUpdate1);
+        try {
+            companyService.updateCoupon(couponToUpdate1);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("The coupon after the update:");
+        try {
+            chartUtils.printCoupon(companyService.getSingleCoupon(4));
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCompanyInfo("Attempt to Update a company coupons id");
+
+        System.out.println("Trying to update the \"id\" of coupon id-4 to coupon id-5:");
+        chartUtils.printCoupon(couponToUpdate1);
+        couponToUpdate1.setId(5);
+        System.out.println("The Coupon was set for update:");
+        chartUtils.printCoupon(couponToUpdate1);
+        try {
+            companyService.updateCoupon(couponToUpdate1);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCompanyInfo("Attempt to Update a coupons company id");
+
+        try {
+            couponToUpdate1 = companyService.getSingleCoupon(4);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Trying to update the \"companyID\" of coupon id-4 to be companyID-3: ");
+        chartUtils.printCoupon(couponToUpdate1);
+        couponToUpdate1.setCompanyID(3);
+        System.out.println("The Coupon was set for update:");
+        chartUtils.printCoupon(couponToUpdate1);
+        try {
+            companyService.updateCoupon(couponToUpdate1);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCompanyInfo("Attempt to Update a coupon id and Title");
+
+        try {
+            couponToUpdate1 = companyService.getSingleCoupon(4);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Trying to update the \"coupon id\" of and the \"title\" of coupon id-4: ");
+        chartUtils.printCoupon(couponToUpdate1);
+        couponToUpdate1.setId(5);
+        couponToUpdate1.setTitle("New-Title2");
+        System.out.println("The Coupon was set for update:");
+        chartUtils.printCoupon(couponToUpdate1);
+        try {
+            companyService.updateCoupon(couponToUpdate1);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
 
         TestUtils.testCompanyInfo("Get all the Company Coupons");
 
@@ -197,7 +317,7 @@ public class CompanyServiceTest implements CommandLineRunner {
 
         Category testCategory = null;
         try {
-            testCategory = companyService.getSingleCoupon(3).getCategory();
+            testCategory = companyService.getSingleCoupon(5).getCategory();
         } catch (invalidCompanyException e) {
             System.out.println(e.getMessage());
         }
@@ -206,9 +326,36 @@ public class CompanyServiceTest implements CommandLineRunner {
 
         TestUtils.testCompanyInfo("Get all Company Coupons up to a maximum price");
 
-        chartUtils.printCoupons(companyService.getAllCompanyCouponsUpToMaxPrice(100));
+        double maxPrice = 0;
+        try {
+            maxPrice = companyService.getSingleCoupon(5).getPrice() + 1;
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("The max price is: " + maxPrice);
+        chartUtils.printCoupons(companyService.getAllCompanyCouponsUpToMaxPrice(maxPrice));
 
         TestUtils.testCompanyInfo("Get all the Company Customers of a single Coupon by Coupon ID");
 
+        System.out.println("Which customers have coupon id number 5:");
+        List<Customer> companiesCustomers = null;
+        try {
+            companiesCustomers = companyService.getAllCompanyCustomersOfASingleCouponByCouponId(5);
+            chartUtils.printCustomers(companiesCustomers);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCompanyInfo("Get all the Company Customers of a single Coupon by a Coupon ID the doesn't belong to the logged company");
+        System.out.println("Which customers have coupon id number 1 (This coupon doesn't belong to the logged company):");
+        companiesCustomers = null;
+        try {
+            companiesCustomers = companyService.getAllCompanyCustomersOfASingleCouponByCouponId(1);
+            chartUtils.printCustomers(companiesCustomers);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println();
+        System.out.println();
     }
 }
