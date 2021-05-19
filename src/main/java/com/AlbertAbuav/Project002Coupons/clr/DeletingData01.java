@@ -1,6 +1,8 @@
 package com.AlbertAbuav.Project002Coupons.clr;
 
 import com.AlbertAbuav.Project002Coupons.beans.Company;
+import com.AlbertAbuav.Project002Coupons.beans.Coupon;
+import com.AlbertAbuav.Project002Coupons.beans.Customer;
 import com.AlbertAbuav.Project002Coupons.exception.invalidAdminException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCompanyException;
 import com.AlbertAbuav.Project002Coupons.exception.invalidCustomerException;
@@ -46,7 +48,7 @@ public class DeletingData01 implements CommandLineRunner {
 
         Company toConnect = null;
         try {
-            toConnect = adminService.getSingleCompany(3);
+            toConnect = adminService.getSingleCompany(1);
         } catch (invalidAdminException e) {
             System.out.println(e.getMessage());
         }
@@ -62,9 +64,64 @@ public class DeletingData01 implements CommandLineRunner {
 
         TestUtils.testCompanyInfo("Delete a Company Coupon");
 
+        Coupon couponToDelete = null;
+        try {
+            couponToDelete = companyService.getSingleCoupon(3);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("This is the Coupon to delete:");
+        chartUtils.printCoupon(couponToDelete);
+        System.out.println();
+        try {
+            companyService.deleteCoupon(couponToDelete);
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println();
+        System.out.println("The company after deleting coupon id-" + couponToDelete.getId());
+        chartUtils.printCompany(companyService.getTheLoggedCompanyDetails());
+
         TestUtils.testAdminInfo("Delete Company");
 
+        Company companyToDelete = null;
+        try {
+            companyToDelete = adminService.getSingleCompany(1);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("This is the company to delete:");
+        chartUtils.printCompany(companyToDelete);
+        System.out.println();
+        try {
+            adminService.deleteCompany(companyToDelete);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println();
+        System.out.println("All Companies after deleting Company id-" + companyToDelete.getId());
+        try {
+            chartUtils.printCompanies(adminService.getAllCompanies());
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+
         TestUtils.testAdminInfo("Delete Customer");
+
+        Customer customerToDelete = null;
+        try {
+            customerToDelete = adminService.getSingleCustomer(1);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("This is the Customer to delete:");
+        chartUtils.printCustomer(customerToDelete);
+        try {
+            adminService.deleteCustomer(customerToDelete);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println();
 
     }
 

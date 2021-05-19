@@ -1,6 +1,7 @@
 package com.AlbertAbuav.Project002Coupons.service;
 
 import com.AlbertAbuav.Project002Coupons.beans.Company;
+import com.AlbertAbuav.Project002Coupons.beans.Coupon;
 import com.AlbertAbuav.Project002Coupons.beans.Customer;
 import com.AlbertAbuav.Project002Coupons.exception.invalidAdminException;
 import com.AlbertAbuav.Project002Coupons.repositories.CompanyRepository;
@@ -17,7 +18,7 @@ import java.util.Objects;
 
 @Service
 @Lazy
-public class AdminService extends ClientFacade{
+public class AdminService extends ClientFacade {
 
     @Autowired
     private ChartUtils chartUtils;
@@ -89,7 +90,31 @@ public class AdminService extends ClientFacade{
      *
      * @param company Company
      */
-    public void deleteCompany(Company company) {
+    public void deleteCompany(Company company) throws invalidAdminException {
+        if (Objects.isNull(company)) {
+            throw new invalidAdminException("There is no company like you entered!");
+        }
+        if (!companyRepository.existsByName(company.getName())) {
+            throw new invalidAdminException("There is no company by the name \"" + company.getName() + "\" in the system!");
+        }
+        List<Coupon> companyCoupons = company.getCoupons();
+        if (companyCoupons.size() != 0) {
+            for (Coupon coupon : companyCoupons) {
+                List<Customer> couponCustomers = customerRepository.findAllByCoupons_Id(coupon.getId());
+                System.out.println("The Customers that have the Company Coupons by id-" + coupon.getId());
+                chartUtils.printCustomers(couponCustomers);
+                System.out.println();
+                for (Customer customer : couponCustomers) {
+                    customer.getCoupons().removeIf(coupon1 -> coupon1.getId() == coupon.getId());
+                    customerRepository.saveAndFlush(customer);
+                    System.out.println("Customer after deleting the Coupon id-" + coupon.getId());
+                    chartUtils.printCustomer(customerRepository.getOne(customer.getId()));
+                }
+            }
+        }
+        for (Coupon coupon : companyCoupons) {
+            couponRepository.delete(coupon);
+        }
         companyRepository.delete(company);
     }
 
@@ -167,7 +192,15 @@ public class AdminService extends ClientFacade{
      *
      * @param customer Customer
      */
-    public void deleteCustomer(Customer customer) {
+    public void deleteCustomer(Customer customer) throws invalidAdminException {
+        if (Objects.isNull(customer)) {
+            throw new invalidAdminException("This customer doesn't exists!");
+        }
+        if (!customerRepository.existsByEmailAndPassword(customer.getEmail(), customer.getPassword())) {
+            throw new invalidAdminException("There is no customer by the name \"" + customer.getFirstName() + " " + customer.getLastName() + "\" in the system!");
+        }
+        customer.setCoupons(null);
+        customerRepository.saveAndFlush(customer);
         customerRepository.delete(customer);
     }
 
