@@ -136,7 +136,7 @@ public class CompanyService extends ClientFacade {
             throw new invalidCompanyException("you can not delete other companies coupons!");
         }
         List<Customer> couponCustomers = customerRepository.findAllByCoupons_Id(coupon.getId());
-        System.out.println("Customers that purchase this coupon:");
+        System.out.println("Customers that purchase this coupon id-" + coupon.getId());
         chartUtils.printCustomers(couponCustomers);
         System.out.println();
         List<Coupon> customerCoupons = null;
@@ -145,13 +145,15 @@ public class CompanyService extends ClientFacade {
             customerCoupons.removeIf(coupon1 -> coupon1.getId() == coupon.getId());
             customer.setCoupons(customerCoupons);
             customerRepository.saveAndFlush(customer);
-            System.out.println("customer coupons after deleting coupon and updating the data base:");
+            System.out.println("customer coupons after deleting coupon id-" + coupon.getId() + " and updating the data base:");
             chartUtils.printCustomer(customerRepository.getOne(customer.getId()));
         }
         Company company = companyRepository.getOne(coupon.getCompanyID());
         company.getCoupons().removeIf(coupon1 -> coupon1.getId() == coupon.getId());
         companyRepository.saveAndFlush(company);
         couponRepository.delete(coupon);
+        Colors.setYellowBoldPrint("DELETED: | ");
+        chartUtils.printCoupon(coupon);
     }
 
     /**
