@@ -40,7 +40,7 @@ public class SchedulingDailyTask implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
-        System.out.println("Inserting new Coupons with Expired Dats:");
+        System.out.println("Inserting new Coupons with Expired Dates:");
         System.out.println();
 
         Coupon couponTo4 = factoryUtils.createCouponOfACompany(4);
@@ -79,7 +79,7 @@ public class SchedulingDailyTask implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
-        System.out.println("The companies with the expired coupon after the injecting them to the data base:");
+        System.out.println("The companies with the expired coupon after injecting them to the data base:");
         try {
             chartUtils.printCompany(adminService.getSingleCompany(4));
             chartUtils.printCompany(adminService.getSingleCompany(5));
@@ -90,7 +90,7 @@ public class SchedulingDailyTask implements CommandLineRunner {
         }
         System.out.println();
 
-        System.out.println("Setting Coupons the Customers purchased to be expired:");
+        System.out.println("Setting Coupons that the Customers purchased to be expired:");
         System.out.println();
         Company companyId2 = null;
         try {
@@ -107,7 +107,7 @@ public class SchedulingDailyTask implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
-        System.out.println("The company with the updated coupons to be expired:");
+        System.out.println("The company with the updated expired coupons:");
 
         try {
             chartUtils.printCompany(adminService.getSingleCompany(2));

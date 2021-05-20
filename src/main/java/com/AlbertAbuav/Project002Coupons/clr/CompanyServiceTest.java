@@ -33,6 +33,7 @@ public class CompanyServiceTest implements CommandLineRunner {
     private final LoginManager loginManager;
     private AdminService adminService;
     private CompanyService companyService;
+    private CompanyService companyService2;
 
     @Override
     public void run(String... args) {
@@ -66,9 +67,30 @@ public class CompanyServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
+        TestUtils.testCompanyInfo("Login to Company number - 4");
+
+        Company toConnect2 = null;
+        try {
+            toConnect2 = adminService.getSingleCompany(4);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+
+        /**
+         * Login to Company Service
+         */
+        try {
+            companyService2 = (CompanyService) loginManager.login(toConnect2.getEmail(), toConnect2.getPassword(), ClientType.COMPANY);
+        } catch (invalidCompanyException | invalidCustomerException | invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+
         TestUtils.testCompanyInfo("Get the logged Company Details");
 
+        System.out.println("The details of the logged Company id-2");
         chartUtils.printCompany(companyService.getTheLoggedCompanyDetails());
+        System.out.println("The details of the logged Company id-4");
+        chartUtils.printCompany(companyService2.getTheLoggedCompanyDetails());
 
         TestUtils.testCompanyInfo("Get Single Coupon");
 
@@ -349,6 +371,14 @@ public class CompanyServiceTest implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
+        TestUtils.testCompanyInfo("Get all the Company Coupons of a specific Category of a Company that have no Coupons");
+
+        try {
+            chartUtils.printCoupons(companyService2.getAllCompanyCouponsOfSpecificCategory(testCategory));
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+
         TestUtils.testCompanyInfo("Get all Company Coupons up to a maximum price");
 
         double maxPrice = 0;
@@ -361,6 +391,14 @@ public class CompanyServiceTest implements CommandLineRunner {
 
         try {
             chartUtils.printCoupons(companyService.getAllCompanyCouponsUpToMaxPrice(maxPrice));
+        } catch (invalidCompanyException e) {
+            System.out.println(e.getMessage());
+        }
+
+        TestUtils.testCompanyInfo("Get all Company Coupons up to a maximum price of a Company that have no Coupons");
+
+        try {
+            chartUtils.printCoupons(companyService2.getAllCompanyCouponsUpToMaxPrice(maxPrice));
         } catch (invalidCompanyException e) {
             System.out.println(e.getMessage());
         }
@@ -385,6 +423,7 @@ public class CompanyServiceTest implements CommandLineRunner {
         }
 
         TestUtils.testCompanyInfo("Get all the Company Customers of a single Coupon by a Coupon ID the doesn't belong to the logged company");
+
         System.out.println("Which customers have coupon id number 1 (This coupon doesn't belong to the logged company):");
         companiesCustomers = null;
         try {

@@ -44,7 +44,7 @@ public class DeletingData01 implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
 
-        TestUtils.testCompanyInfo("Login to Company number 3");
+        TestUtils.testCompanyInfo("Login to Company id-1");
 
         Company toConnect = null;
         try {
@@ -99,7 +99,7 @@ public class DeletingData01 implements CommandLineRunner {
             System.out.println(e.getMessage());
         }
         System.out.println();
-        System.out.println("All Companies after deleting Company id-" + companyToDelete.getId());
+        System.out.println("All Companies that were left after deleting Company id-" + companyToDelete.getId());
         try {
             chartUtils.printCompanies(adminService.getAllCompanies());
         } catch (invalidAdminException e) {
@@ -118,6 +118,12 @@ public class DeletingData01 implements CommandLineRunner {
         chartUtils.printCustomer(customerToDelete);
         try {
             adminService.deleteCustomer(customerToDelete);
+        } catch (invalidAdminException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("The Customers that were left after deleting Customer id-" + customerToDelete.getId());
+        try {
+            chartUtils.printCustomers(adminService.getAllCustomers());
         } catch (invalidAdminException e) {
             System.out.println(e.getMessage());
         }

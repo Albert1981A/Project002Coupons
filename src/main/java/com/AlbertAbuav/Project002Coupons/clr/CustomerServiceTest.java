@@ -217,5 +217,8 @@ public class CustomerServiceTest implements CommandLineRunner {
 
         TestUtils.testCustomerInfo("Find all Customers by a Coupon ID-3");
         chartUtils.printCustomers(customerService.findAllCustomersByCouponId(3));
+
+        System.out.println();
     }
+
 }
